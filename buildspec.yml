@@ -7,13 +7,16 @@ phases:
   build:
     commands:
       - echo Building Docker image...
-      - docker build -t 808865497406.dkr.ecr.us-east-1.amazonaws.com/inventory-management:latest .
-      - docker tag 808865497406.dkr.ecr.us-east-1.amazonaws.com/inventory-management:latest 808865497406.dkr.ecr.us-east-1.amazonaws.com/inventory-management:$IMAGE_TAG
+      - docker build -t 343501691580.dkr.ecr.us-east-1.amazonaws.com/inventory-management:latest .
+      - docker tag 343501691580.dkr.ecr.us-east-1.amazonaws.com/inventory-management:latest343501691580.dkr.ecr.us-east-1.amazonaws.com/inventory-management:$IMAGE_TAG
   post_build:
     commands:
       - echo Pushing Docker image to ECR...
-      - docker push 808865497406.dkr.ecr.us-east-1.amazonaws.com/inventory-management:$IMAGE_TAG
+      - docker push 343501691580.dkr.ecr.us-east-1.amazonaws.com/inventory-management:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"inventory-app","imageUri":"%s"}]' 808865497406.dkr.ecr.us-east-1.amazonaws.com/inventory-management:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"inventory-app","imageUri":"%s"}]' 343501691580.dkr.ecr.us-east-1.amazonaws.com/inventory-management:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
+# arn:aws:codeconnections:us-east-1:808865497406:connection/c886f3d3-aff9-44d8-83e7-790c91d489e4
+
+# ECR : 343501691580.dkr.ecr.us-east-1.amazonaws.com/inventory-management
