@@ -1,19 +1,23 @@
 version: 0.2
+
+env:
+  variables:
+    ECR_REPO_NAME: "inventory-management"
+
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+      - ECR_REPO_URI="$AWS_ACCOUNT_ID.dkr.ecr.us-east-2.amazonaws.com/$ECR_REPO_NAME"
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin  551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management
   build:
     commands:
-      - echo Building Docker image...
+      - mvn clean package
       - docker build -t 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest .
-      - docker tag 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest
+      - docker tag 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest
   post_build:
     commands:
-      - echo Pushing Docker image to ECR...
       - docker push 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest
-      - echo Writing image definitions file...
-      - printf '[{"name":"inventory-app","imageUri":"%s"}]' 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest  > imagedefinitions.json
+      - printf '[{"name":"inventory-app","imageUri":"%s"}]' 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest> imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
