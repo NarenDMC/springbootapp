@@ -18,7 +18,7 @@ phases:
       - mvn clean package -DskipTests
       - echo "JAR file created:"
       - ls -l target/
-      - cd .. # Return to the root directory
+      - cd ..
       - echo "Building Docker image..."
       - docker build -t $ECR_REPO_URI:latest .
       - docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$IMAGE_TAG
