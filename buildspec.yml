@@ -29,4 +29,6 @@ phases:
       - printf '[{"name":"inventory-app","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
-  files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
+    - appspec.yml # Explicitly include the AppSpec file

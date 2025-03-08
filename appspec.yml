@@ -1,11 +1,11 @@
-version: 0.0
+version: "0.0"
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "arn:aws:ecs:us-east-1:596509374816:task/inventorycluster/0153d002894a4102a0ffc7d59933aed4"
+        TaskDefinition: "arn:aws:ecs:us-east-1:596509374816:task-definition/inventory-task:1"
         LoadBalancerInfo:
           ContainerName: "inventory-app"
           ContainerPort: 8080
         PlatformVersion: "LATEST"
-        ClusterName: "arn:aws:ecs:us-east-1:596509374816:cluster/inventorycluster"
+        ClusterName: "inventorycluster"
