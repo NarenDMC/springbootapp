@@ -2,10 +2,9 @@ version: 0.2
 
 env:
   variables:
-    # Fix region mismatch: ECR URI is us-east-1, so region must match
-    AWS_DEFAULT_REGION: "us-east-1"
     ECR_REPO_URI: "596509374816.dkr.ecr.us-east-1.amazonaws.com/inventory-management"
     IMAGE_TAG: "latest"
+    AWS_DEFAULT_REGION: "us-east-1" # Fixed region to match ECR URI
 
 phases:
   pre_build:
@@ -25,7 +24,7 @@ phases:
     commands:
       - echo "Pushing Docker image to ECR..."
       - docker push $ECR_REPO_URI:$IMAGE_TAG
-      - echo "Writing image definitions file..."
+      - echo "Generating imagedefinitions.json..."
       - printf '[{"name":"inventory-app","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
