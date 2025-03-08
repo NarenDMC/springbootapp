@@ -8,5 +8,3 @@ Resources:
           ContainerName: "inventory-app"
           ContainerPort: 8080
         PlatformVersion: "LATEST"
-        Cluster: "inventorycluster"
-        ServiceName: "sprgbootinventoryservice"
