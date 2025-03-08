@@ -2,22 +2,32 @@ version: 0.2
 
 env:
   variables:
-    ECR_REPO_NAME: "inventory-management"
+    ECR_REPO_URI: "551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management"
+    IMAGE_TAG: "latest"
+    AWS_DEFAULT_REGION: "us-east-2"
 
 phases:
   pre_build:
     commands:
-      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-      - ECR_REPO_URI="$AWS_ACCOUNT_ID.dkr.ecr.us-east-2.amazonaws.com/$ECR_REPO_NAME"
-      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin  551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
+      - echo "Logged in to ECR repository: $ECR_REPO_URI"
   build:
     commands:
+      - echo "Building application using Maven..."
       - mvn clean package
-      - docker build -t 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest .
-      - docker tag 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest
+      - echo "Building Docker image..."
+      - docker build -t $ECR_REPO_URI:latest .
+      - echo "Tagging Docker image..."
+      - docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$IMAGE_TAG
   post_build:
     commands:
-      - docker push 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest
-      - printf '[{"name":"inventory-app","imageUri":"%s"}]' 551899295811.dkr.ecr.us-east-2.amazonaws.com/inventory-management:latest> imagedefinitions.json
+      - echo "Pushing Docker image to Amazon ECR..."
+      - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - echo "Creating imagedefinitions.json file..."
+      - printf '[{"name":"inventory-app","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
+      - echo "imagedefinitions.json created successfully."
 artifacts:
-  files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
+  discard-paths: yes
