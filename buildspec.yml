@@ -2,9 +2,9 @@ version: 0.2
 
 env:
   variables:
-    ECR_REPO_URI: "596509374816.dkr.ecr.us-east-2.amazonaws.com/inventory-management"
+    ECR_REPO_URI: "596509374816.dkr.ecr.us-east-1.amazonaws.com/inventory-management"
     IMAGE_TAG: "latest"
-    AWS_DEFAULT_REGION: "us-east-2"
+    AWS_DEFAULT_REGION: "us-east-1"
 
 phases:
   pre_build:
