@@ -8,4 +8,4 @@ Resources:
           ContainerName: "inventory-app"
           ContainerPort: 8080
         PlatformVersion: "LATEST"
-        ClusterName: "inventorycluster"
+        ClusterName: "arn:aws:ecs:us-east-1:596509374816:cluster/inventorycluster"
