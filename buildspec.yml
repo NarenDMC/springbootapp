@@ -14,15 +14,16 @@ phases:
   build:
     commands:
       - echo "Building application..."
-      - mvn clean package -DskipTests # Skip tests temporarily
+      - mvn clean package -DskipTests -e -X || (echo "Maven build failed!" && exit 1)
+      - echo "JAR file created:"
+      - ls -l target/*.jar # Fail if JAR is missing
       - echo "Building Docker image..."
-      - ls -l target/ # Debug: Verify JAR exists
-      - docker build -t $ECR_REPO_URI:latest .
+      - docker build -t $ECR_REPO_URI:latest . || (echo "Docker build failed!" && exit 1)
       - docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo "Pushing Docker image..."
-      - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - docker push $ECR_REPO_URI:$IMAGE_TAG || (echo "Docker push failed!" && exit 1)
       - printf '[{"name":"inventory-app","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
